@@ -11,6 +11,7 @@
   "dependencies": {
     "bufferutil": "^3.0.3",
     "discord.js": "^11.2.1",
+    "mysql": "^2.15.0",
     "snekfetch": "^3.5.8",
     "unsplash-js": "^4.7.0",
     "winston": "^2.4.0"
