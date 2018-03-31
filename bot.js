@@ -16,8 +16,8 @@ logger.level = 'debug';
 const bot = new Discord.Client({disableEveryone: true});
 bot.commands = new Discord.Collection();
 bot.mutes = require("./mutes.json");
-bot.profiles = require("./users.json");
-bot.housePoints = require("./housePoints.json");
+// bot.profiles = require("./users.json");
+// bot.housePoints = require("./housePoints.json");
 
 fs.readdir("./cmds/", (err, files) => {
 	if(err) logger.error(err);
@@ -64,7 +64,7 @@ bot.on("ready", async () => {
 
 			if(member.user.bot) return;
 
-			con.query(`SELECT * FROM names WHERE UUID='${memid}'`, (err, rows)=>{
+			con.query(`SELECT * FROM profiles WHERE UUID='${memid}'`, (err, rows)=>{
 				if(err) throw err;
 
 				name = member.user.username;
@@ -72,21 +72,21 @@ bot.on("ready", async () => {
 				name = name.split(`'`).join(`\\'`);
 
 				if(rows.length<1)
-					con.query(`INSERT INTO names (UUID, Name) VALUES ('${memid}','${name}')`);
+					con.query(`INSERT INTO profiles (UUID, Name) VALUES ('${memid}','${name}')`);
 			});
 
-			if(bot.profiles[memid]) return;
+			// if(bot.profiles[memid]) return;
 	
-			bot.profiles[memid] = {
-				house: null,
-				color: null
-			};
+			// bot.profiles[memid] = {
+			// 	house: null,
+			// 	color: null
+			// };
 		});
 	})
 
-	fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-					if(err) throw err;
-				});
+	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
+	// 				if(err) throw err;
+	// 			});
 
 	bot.setInterval(() => {
 		bot.commands.get("spy").checkTime();
@@ -125,22 +125,22 @@ bot.on("guildMemberAdd", async(member) => {
 		
 	if(member.user.bot) return logger.info(`${member.displayName} was skipped because they were a bot`);
 
-	bot.profiles[member.id] = {
-		house: null,
-		color: null
-	};
+	// bot.profiles[member.id] = {
+	// 	house: null,
+	// 	color: null
+	// };
 
-	con.query(`SELECT * FROM names WHERE UUID='${member.id}'`, (err, rows)=>{
+	con.query(`SELECT * FROM profiles WHERE UUID='${member.id}'`, (err, rows)=>{
 		if(err) throw err;
 
 		if(rows.length<1)
-			con.query(`INSERT INTO names (UUID, Name) VALUES ('${memid}','${member.user.username}')`);
+			con.query(`INSERT INTO profiles (UUID, Name) VALUES ('${memid}','${member.user.username}')`);
 	});
 
-	fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-					if(err) throw err;
-					logger.info(`${member.displayName} has been added`);
-				});
+	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
+	// 				if(err) throw err;
+	// 				logger.info(`${member.displayName} has been added`);
+	// 			});
 });
 
 bot.on("guildMemberRemove", async(member) => {
@@ -153,12 +153,14 @@ bot.on("guildMemberRemove", async(member) => {
 		if(!toRemove) return;
 	});
 
-	if(toRemove) delete bot.profiles[member.id];
+	if(toRemove) delete con.query(`DELETE FROM profiles WHERE UUID="${member.id}"`, (err, rows) => {
+		if(err) throw err;
+	});
 
-	fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-				if(err) throw err;
-				logger.info(`${member.displayName} was removed`);
-			});
+	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
+	// 			if(err) throw err;
+	// 			logger.info(`${member.displayName} was removed`);
+	// 		});
 });
 
 bot.on("message", async message => {
@@ -178,11 +180,32 @@ bot.on("message", async message => {
 });
 
 function addPoints(bot, member) {
-	if(!bot.profiles[member.id].house) return;
+	// if(!bot.profiles[member.id].house) return;
 
-	fs.writeFile("./housePoints.json", JSON.stringify(bot.housePoints, null, 4), err => {
-					if(err) throw err;
-				});
+	con.query(`SELECT h.* FROM houses h JOIN profiles p ON UUID="${member.id}" WHERE p.house = h.name;`, (err, rows) => {
+		if(err) throw err;
 
-	return ++bot.housePoints[bot.profiles[member.id].house];
+		if(rows.length<=0) return;
+
+		house = rows[0].name;
+		points = rows[0].points;
+
+		con.query(`UPDATE houses SET points = ${++points} WHERE name = "${house}"`, (err, rows) => {
+			if(err) throw err;
+		})
+
+		// ++bot.housePoints[rows[0].house];
+
+		// fs.writeFile("./housePoints.json", JSON.stringify(bot.housePoints, null, 4), err => {
+		// 			if(err) throw err;
+		// 		});
+
+		return;
+	})
+
+	// fs.writeFile("./housePoints.json", JSON.stringify(bot.housePoints, null, 4), err => {
+	// 				if(err) throw err;
+	// 			});
+
+	// return ++bot.housePoints[bot.profiles[member.id].house];
 }

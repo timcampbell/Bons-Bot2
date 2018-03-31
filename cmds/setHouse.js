@@ -1,21 +1,27 @@
 const fs = module.require("fs");
 const houses = ["gryffindor", "hufflepuff", "ravenclaw", "slytherin"];
 
-module.exports.run = async(bot, message, args) => {
+module.exports.run = async(bot, message, args, con) => {
 
 	if(args.length <= 0) return message.channel.send("Please specify a house.");
 
 	let house = args[0].toLowerCase()
 	if(!houses.includes(house)) return message.channel.send("That is not a valid house.");
+
+	con.query(`UPDATE profiles SET house="${house.charAt(0).toUpperCase()}${house.slice(1)}" WHERE UUID="${message.author.id}";`, (err, rows) => {
+		con.query(`SELECT house FROM profiles WHERE UUID = "${message.author.id}";`, (err, rows) => {
+			return message.channel.send(`${message.author.username}'s house has been set to ${rows[0].house}`);
+		})
+	});
 		
 
-	bot.profiles[message.author.id].house = `${house.charAt(0).toUpperCase()}${house.slice(1)}`;
+	// bot.profiles[message.author.id].house = `${house.charAt(0).toUpperCase()}${house.slice(1)}`;
 
-	fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-		if(err) throw err;
-	})
+	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
+	// 	if(err) throw err;
+	// })
 
-	return message.channel.send(`${message.author.username}'s house has been set to ${bot.profiles[message.author.id].house}`);
+	// return message.channel.send(`${message.author.username}'s house has been set to ${bot.profiles[message.author.id].house}`);
 }
 
 module.exports.help = {
