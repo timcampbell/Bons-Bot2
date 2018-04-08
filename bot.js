@@ -134,7 +134,7 @@ bot.on("guildMemberAdd", async(member) => {
 		if(err) throw err;
 
 		if(rows.length<1)
-			con.query(`INSERT INTO profiles (UUID, Name) VALUES ('${memid}','${member.user.username}')`);
+			con.query(`INSERT INTO profiles (UUID, Name) VALUES ('${member.id}','${member.user.username}')`);
 	});
 
 	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
