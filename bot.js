@@ -16,8 +16,6 @@ logger.level = 'debug';
 const bot = new Discord.Client({disableEveryone: true});
 bot.commands = new Discord.Collection();
 bot.mutes = require("./mutes.json");
-// bot.profiles = require("./users.json");
-// bot.housePoints = require("./housePoints.json");
 
 fs.readdir("./cmds/", (err, files) => {
 	if(err) logger.error(err);
@@ -74,19 +72,8 @@ bot.on("ready", async () => {
 				if(rows.length<1)
 					con.query(`INSERT INTO profiles (UUID, Name) VALUES ('${memid}','${name}')`);
 			});
-
-			// if(bot.profiles[memid]) return;
-	
-			// bot.profiles[memid] = {
-			// 	house: null,
-			// 	color: null
-			// };
 		});
 	})
-
-	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-	// 				if(err) throw err;
-	// 			});
 
 	bot.setInterval(() => {
 		bot.commands.get("spy").checkTime();
@@ -121,14 +108,8 @@ bot.on("ready", async () => {
 });
 
 bot.on("guildMemberAdd", async(member) => {
-	// if(bot.profiles[member.id]) return logger.info(`${member.displayName} was skipped because they are already saved`);
 		
 	if(member.user.bot) return logger.info(`${member.displayName} was skipped because they were a bot`);
-
-	// bot.profiles[member.id] = {
-	// 	house: null,
-	// 	color: null
-	// };
 
 	con.query(`SELECT * FROM profiles WHERE UUID='${member.id}'`, (err, rows)=>{
 		if(err) throw err;
@@ -136,11 +117,6 @@ bot.on("guildMemberAdd", async(member) => {
 		if(rows.length<1)
 			con.query(`INSERT INTO profiles (UUID, Name) VALUES ('${member.id}','${member.user.username}')`);
 	});
-
-	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-	// 				if(err) throw err;
-	// 				logger.info(`${member.displayName} has been added`);
-	// 			});
 });
 
 bot.on("guildMemberRemove", async(member) => {
@@ -148,8 +124,7 @@ bot.on("guildMemberRemove", async(member) => {
 
 
 	con.query(`SELECT * FROM profiles WHERE UUID="${member.id}"`, (err, rows) => {
-		// if(!bot.profiles[member.id]) return;
-
+		
 		if(rows.length<1) return;
 
 		bot.guilds.forEach(async(guild, id) => {
@@ -161,16 +136,15 @@ bot.on("guildMemberRemove", async(member) => {
 			if(err) throw err;
 		});
 	});
-
-	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-	// 			if(err) throw err;
-	// 			logger.info(`${member.displayName} was removed`);
-	// 		});
 });
 
 bot.on("message", async message => {
 
-	if(message.author.bot) return;
+	if(message.author.bot) 
+	{
+		pokePingCheck(message);
+		return;
+	};
 	if(message.channel.type === 'dm') return;
 
 	let messageArray = message.content.split(" ");
@@ -185,8 +159,6 @@ bot.on("message", async message => {
 });
 
 function addPoints(bot, member) {
-	// if(!bot.profiles[member.id].house) return;
-
 	con.query(`SELECT h.* FROM houses h JOIN profiles p ON UUID="${member.id}" WHERE p.house = h.name;`, (err, rows) => {
 		if(err) throw err;
 
@@ -199,18 +171,21 @@ function addPoints(bot, member) {
 			if(err) throw err;
 		})
 
-		// ++bot.housePoints[rows[0].house];
-
-		// fs.writeFile("./housePoints.json", JSON.stringify(bot.housePoints, null, 4), err => {
-		// 			if(err) throw err;
-		// 		});
-
 		return;
 	})
+}
 
-	// fs.writeFile("./housePoints.json", JSON.stringify(bot.housePoints, null, 4), err => {
-	// 				if(err) throw err;
-	// 			});
+function pokePingCheck(message){
+	let pokeRole = message.guild.roles.find('name', 'PokePing');
+	let firstEmbed = message.embeds[0];
+	
 
-	// return ++bot.housePoints[bot.profiles[member.id].house];
+	if(!pokeRole) return;
+	else if(pokeRole.members.array.length <= 0) return;
+	if(message.author.id != botSettings.pokecordID) return;
+	if(!firstEmbed) return;
+	else if(!firstEmbed.title) return;
+	else if(!firstEmbed.title.startsWith(`A wild`)) return;
+
+	return message.channel.send(`${pokeRole} a new pokemon has appeared`);
 }
