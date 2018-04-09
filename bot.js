@@ -178,10 +178,9 @@ function addPoints(bot, member) {
 function pokePingCheck(message){
 	let pokeRole = message.guild.roles.find('name', 'PokePing');
 	let firstEmbed = message.embeds[0];
-	
 
 	if(!pokeRole) return;
-	else if(pokeRole.members.array.length <= 0) return;
+	else if(pokeRole.members.size <= 0) return;
 	if(message.author.id != botSettings.pokecordID) return;
 	if(!firstEmbed) return;
 	else if(!firstEmbed.title) return;
