@@ -10,12 +10,6 @@ module.exports.run = async(bot, message, args, con) => {
 		})
 	});
 
-	// bot.profiles[message.author.id].color = args[0];
-
-	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-	// 	if(err) throw err;
-	// })
-
 }
 
 module.exports.help = {

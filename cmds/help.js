@@ -1,15 +1,24 @@
 const Discord = module.require("discord.js");
 const Settings = module.require("../botSettings.json")
 
-module.exports.run = async(bot, message, args) => {
-	let embed = new Discord.RichEmbed()
-		.setColor("#9B59B6")
-		.setThumbnail(bot.user.avatarURL);
+let profile;
 
-	if(args.length<1)
-		await overview(bot, message, embed);
-	else
-		await specific(bot, message, embed, args[0])
+module.exports.run = async(bot, message, args, con) => {
+	
+
+	con.query(`SELECT * FROM profiles WHERE UUID = '${message.author.id}';`, (err, rows) => {
+		if (err) throw err;
+		profile = rows[0];
+
+		let embed = new Discord.RichEmbed()
+			.setColor(profile.color || "#E7B2FF")
+			.setThumbnail(bot.user.avatarURL);
+
+		if(args.length<1)
+			overview(bot, message, embed);
+		else
+			specific(bot, message, embed, args[0]);
+	});
 }
 
 async function overview(bot, message, embed){

@@ -13,15 +13,6 @@ module.exports.run = async(bot, message, args, con) => {
 			return message.channel.send(`${message.author.username}'s house has been set to ${rows[0].house}`);
 		})
 	});
-		
-
-	// bot.profiles[message.author.id].house = `${house.charAt(0).toUpperCase()}${house.slice(1)}`;
-
-	// fs.writeFile("./users.json", JSON.stringify(bot.profiles, null, 4), err => {
-	// 	if(err) throw err;
-	// })
-
-	// return message.channel.send(`${message.author.username}'s house has been set to ${bot.profiles[message.author.id].house}`);
 }
 
 module.exports.help = {

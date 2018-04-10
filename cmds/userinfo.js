@@ -35,7 +35,7 @@ function getProfile(con) {
 
 function processProfile(profile, con){
 	house = profile.house || "No house set";
-	color = profile.color || "#9B59B6";
+	color = profile.color || "#E7B2FF";
 
 	con.query(sisSQL, (err,rows) => {
 		if(err) throw err;

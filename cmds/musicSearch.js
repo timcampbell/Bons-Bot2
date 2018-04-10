@@ -2,7 +2,7 @@ const Discord = module.require("discord.js");
 const snekFetch = module.require("snekFetch");
 const botSettings = module.require("../botSettings.json");
 
-module.exports.run = async(bot, message, args) => {
+module.exports.run = async(bot, message, args, con) => {
 	if(args.length <= 0) return message.channel.send("Please enter search terms");
 
 	let search="";
@@ -10,13 +10,15 @@ module.exports.run = async(bot, message, args) => {
 		search = `${search}+${args[i]}`;
 	}
 
-	snekFetch.get(`${botSettings.musicURL}?method=track.search&track=${search.slice(1)}&api_key=${botSettings.musicAPI}&format=json`).then( r => {
-		let tracks = r.body.results.trackmatches.track;
+	let r = await snekFetch.get(`${botSettings.musicURL}?method=track.search&track=${search.slice(1)}&api_key=${botSettings.musicAPI}&format=json`);
 
-		let track = (tracks[Math.floor(Math.random()*tracks.length)]);
+	let track = (r.body.results.trackmatches.track[Math.floor(Math.random()*r.body.results.trackmatches.track.length)]);
+
+	con.query(`SELECT * FROM profiles WHERE UUID = '${message.author.id}';`, (err, rows) => {
+		let profile = rows[0];
 
 		let embed = new Discord.RichEmbed()
-			.setColor("#E7B2FF")
+			.setColor(profile.color || "#E7B2FF")
 			.setAuthor(track.name)
 			.setDescription(`By: ${track.artist}`)
 			.setThumbnail(track.image[track.image.length-1]['#text'])

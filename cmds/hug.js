@@ -7,7 +7,8 @@ const mID = "314206739639566346";
 
 const cats = ["yuri", "yaoi", "straight"];
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (bot, message, args, con) => {
+
 	let member = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
 	args = args.splice(1);
 
@@ -21,12 +22,17 @@ module.exports.run = async (bot, message, args) => {
 	let gif = gifs[index];
 	if(member.id === mID && message.author.id === saeID) gif = actions.hugs.yuri[16];
 
-	let embed = new Discord.RichEmbed()
-		.setAuthor(`${message.member.displayName} hugged ${member.displayName}`)
-		.setImage(gif)
-		.setColor("#E7B2FF");
 
-	message.channel.send(embed);
+	con.query(`SELECT * FROM profiles WHERE UUID = '${message.author.id}';`, (err, rows) => {
+		let profile = rows[0];
+		
+		let embed = new Discord.RichEmbed()
+			.setAuthor(`${message.member.displayName} hugged ${member.displayName}`)
+			.setImage(gif)
+			.setColor(profile.color || "#E7B2FF");
+
+		message.channel.send(embed);
+	});
 }
 
 module.exports.help = {
