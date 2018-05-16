@@ -56,7 +56,7 @@ async function del(message, brother, con){
 
 module.exports.help = {
 	name: "brother",
-	usage: "<brother <add|del> <mention>",
+	usage: `${botSettings.prefix}brother <add|del> <mention>`,
 	hidden: false,
 	category: "Relations"
 }

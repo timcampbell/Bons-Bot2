@@ -29,7 +29,7 @@ module.exports.run = async(bot, message, args, con) => {
 
 module.exports.help = {
 	name: "music",
-	usage: "<music <searchTerms>",
+	usage: `${botSettings.prefix}music <searchTerms>`,
 	hidden: false,
 	category: "Music"
 }

@@ -4,16 +4,16 @@ const botSettings = module.require("../botSettings.json");
 
 module.exports.run = async(bot, message, args, con) => {
 	
-	for (var i = 0; i < 200; i++) {
-		message.channel.send(`spam: ${i}`);
-	}
+	args.forEach( a => {
+		message.channel.send(a);
+	})
 	return;
 
 }
 
 module.exports.help = {
 	name: "test",
-	usage: "<test",
+	usage: `${botSettings.prefix}test`,
 	hidden: true,
 	category: "Misc"
 }

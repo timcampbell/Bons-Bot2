@@ -1,4 +1,5 @@
 const Discord = module.require("discord.js");
+const botSettings = module.require("../botSettings.json");
 
 var house;
 var color;
@@ -87,7 +88,7 @@ function processBro(rows, con){
 
 module.exports.help = {
 	name: "userinfo",
-	usage: "<userinfo [mention]",
+	usage: `${botSettings.prefix}userinfo [mention]`,
 	hidden: false,
 	category: "Misc"
 }

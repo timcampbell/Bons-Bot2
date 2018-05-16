@@ -2,9 +2,6 @@ const botSettings = module.require("../botSettings.json");
 const Discord = module.require("discord.js");
 const actions = module.require("../actions.json");
 
-const saeID = "329642253943570432";
-const mID = "314206739639566346";
-
 const cats = ["yuri", "yaoi", "straight"];
 
 module.exports.run = async (bot, message, args, con) => {
@@ -20,7 +17,6 @@ module.exports.run = async (bot, message, args, con) => {
 	let index = Math.floor(Math.random()*gifs.length);
 
 	let gif = gifs[index];
-	if(member.id === mID && message.author.id === saeID) gif = actions.hugs.yuri[16];
 
 
 	con.query(`SELECT * FROM profiles WHERE UUID = '${message.author.id}';`, (err, rows) => {
@@ -37,7 +33,7 @@ module.exports.run = async (bot, message, args, con) => {
 
 module.exports.help = {
 	name: "hug",
-	usage: "<hug <mention> [yuri, yaoi, or straight]",
+	usage: `${botSettings.prefix}hug <mention> [yuri, yaoi, or straight]`,
 	hidden: false,
 	category: "Actions"
 }

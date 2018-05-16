@@ -1,4 +1,5 @@
 const fs = module.require("fs");
+const botSettings = module.require("../botSettings.json");
 
 module.exports.run = async (bot, message, args) => {
 	if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You don't have the manage messages permission");
@@ -57,7 +58,7 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
 	name: "mute",
-	usage: "<mute <mention> <seconds>",
+	usage: `${botSettings.prefix}mute <mention> <seconds>`,
 	hidden: false,
 	category: "Admin"
 }

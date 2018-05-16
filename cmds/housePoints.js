@@ -1,4 +1,5 @@
 const Discord = module.require("discord.js");
+const botSettings = module.require("../botSettings.json");
 
 module.exports.run = async(bot, message, args, con) => {
 
@@ -21,7 +22,7 @@ module.exports.run = async(bot, message, args, con) => {
 
 module.exports.help = {
 	name: "housePoints",
-	usage: "<housePoints",
+	usage: `${botSettings.prefix}housePoints`,
 	hidden: false,
 	category: "Fun"
 }

@@ -49,7 +49,7 @@ async function specific(bot, message, embed, cmd){
 
 module.exports.help = {
 	name: "help",
-	usage: "<help",
+	usage: `${Settings.prefix}help`,
 	hidden: false,
 	category: "Help"
 }

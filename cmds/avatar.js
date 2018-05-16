@@ -1,3 +1,5 @@
+const botSettings = module.require("../botSettings.json");
+
 module.exports.run = async (bot, message, args) => {
 	let member = message.mentions.users.first() || message.author;
 	let msg = await message.channel.send("Generating avatar...");
@@ -14,7 +16,7 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
 	name: "avatar",
-	usage: "<avatar [mention]",
+	usage: `${botSettings.prefix}avatar [mention]`,
 	hidden: false,
 	category: "Images"
 }

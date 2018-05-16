@@ -1,3 +1,5 @@
+const botSettings = module.require("../botSettings.json");
+
 module.exports.run = async (bot, message, args) => {
 	let msg = await message.channel.send("Generating icon...");
 
@@ -15,7 +17,7 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
 	name: "icon",
-	usage: "<icon",
+	usage: `${botSettings.prefix}icon`,
 	hidden: false,
 	category: "Images"
 }

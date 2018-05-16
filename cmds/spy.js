@@ -31,7 +31,7 @@ module.exports.run = async(bot, message, args) => {
 
 module.exports.help = {
 	name: "spy",
-	usage: "<spy <ready|join|leave|start|end|locations|time x>",
+	usage: `${botSettings.prefix}spy <ready|join|leave|start|end|locations|time x>`,
 	hidden: false,
 	category: "Fun"
 }

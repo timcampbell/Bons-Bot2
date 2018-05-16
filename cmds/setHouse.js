@@ -1,5 +1,6 @@
 const fs = module.require("fs");
 const houses = ["gryffindor", "hufflepuff", "ravenclaw", "slytherin"];
+const botSettings = module.require("../botSettings.json");
 
 module.exports.run = async(bot, message, args, con) => {
 
@@ -17,7 +18,7 @@ module.exports.run = async(bot, message, args, con) => {
 
 module.exports.help = {
 	"name": "setHouse",
-	"usage": "<setHouse <House>",
+	"usage": `${botSettings.prefix}setHouse <House>`,
 	hidden: false,
 	category: "Fun"
 }

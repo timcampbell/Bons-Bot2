@@ -1,4 +1,5 @@
 const fs = module.require("fs");
+const botSettings = module.require("../botSettings.json");
 
 module.exports.run = async(bot, message, args, con) => {
 
@@ -14,7 +15,7 @@ module.exports.run = async(bot, message, args, con) => {
 
 module.exports.help = {
 	"name": "setColor",
-	"usage": "<setColor <hexCode>",
+	"usage": `${botSettings.prefix}setColor <hexCode>`,
 	hidden: false,
 	category: "Misc"
 }

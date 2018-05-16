@@ -36,7 +36,7 @@ module.exports.run = async(bot, message, args, con) => {
 
 module.exports.help = {
 	name: "xkcd",
-	usage: "<xkcd [num]",
+	usage: `${botSettings.prefix}xkcd [num]`,
 	hidden: true,
 	category: "Images"
 }

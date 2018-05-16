@@ -21,7 +21,7 @@ module.exports.run = async(bot, message, args) => {
 
 module.exports.help = {
 	name: "wyr",
-	usage: "<wyr [nsfw]",
+	usage: `${botSettings.prefix}wyr [nsfw]`,
 	hidden: false,
 	category: "Fun"
 }

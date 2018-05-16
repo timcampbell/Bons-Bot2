@@ -1,4 +1,5 @@
 const fs = module.require("fs");
+const botSettings = module.require("../botSettings.json");
 
 module.exports.run = async (bot, message, args) => {
 
@@ -31,7 +32,7 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
 	name: "enroll",
-	usage: "<enroll",
+	usage: `${botSettings.prefix}enroll`,
 	hidden: false,
 	category: "Misc"
 }
